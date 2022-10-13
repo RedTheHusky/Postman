@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "8b1875b6-aa72-48ce-be93-04a7de37c974",
+		"name": "pet 3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12037257"
+	},
+	"item": [
+		{
+			"name": "addPet2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var petid=pm.response.text().substring(pm.response.text().indexOf(\":\")+1, pm.response.text().indexOf(\",\"));\r",
+							"console.info(\"pet id=\"+petid);\r",
+							"//pm.environment.set(\"ID\",petid );\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"try{\r",
+							"    let data_index=pm.environment.get(\"data_index\");\r",
+							"    let data_max=pm.environment.get(\"data_max\");\r",
+							"    console.log(\"data=\"+\"data[\"+data_index+\"]\");\r",
+							"    try{\r",
+							"        let inputData=pm.environment.get(\"data[\"+data_index+\"]\");\r",
+							"        console.log(\"inputData=\"+inputData);\r",
+							"        let jsonData=JSON.parse(inputData);\r",
+							"        console.log(\"jsonData=\"+jsonData);\r",
+							"        let body=JSON.stringify(jsonData)\r",
+							"        console.log(\"body=\"+body);\r",
+							"        pm.collectionVariables.set('req_body', body);\r",
+							"        //pm.variables.set('body', jsonData);\r",
+							"    }catch(e){\r",
+							"        console.error(e); \r",
+							"        pm.collectionVariables.set('req_body', \"\");\r",
+							"        pm.test(\"Exception:\", function () {\r",
+							"            // pm.expect.fail(\"Value equals -1\")\r",
+							"            throw new Error(e.message);\r",
+							"        });\r",
+							"    }\r",
+							"    //if(data_index==data_max||data_index==data_max-1){\r",
+							"    if(data_index>=data_max-1){\r",
+							"        pm.environment.set(\"data_index\",0);\r",
+							"    }else{\r",
+							"        data_index++\r",
+							"        console.log(\"data_index=\"+data_index);\r",
+							"        pm.environment.set(\"data_index\",data_index);\r",
+							"    }\r",
+							"}catch(e){\r",
+							"    console.error(e); \r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{req_body}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/pet",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "req_body",
+			"value": ""
+		}
+	]
+}
